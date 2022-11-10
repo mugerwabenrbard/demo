@@ -80,7 +80,7 @@ const ProductForm = () => {
 
     const handleSubmit = (e) =>{
         e.preventDefault()
-        
+
         const formData = new FormData()
         formData.append('label', label)
         formData.append('brand', brand)
@@ -91,8 +91,6 @@ const ProductForm = () => {
         formData.append('featured', featured)
         formData.append('image', image)
         axiosInstance.post('/product/add', formData).then(res=>console.log(res.data)).catch(err=>console.log(err))
-        // window.location = `/product/${}`
-        // window.location.reload(true)
     
     }
   return (
