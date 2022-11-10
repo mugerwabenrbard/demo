@@ -5,6 +5,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Link } from 'react-router-dom';
 import { axiosInstance } from '../config';
+import axios from 'axios';
 
 const Container = styled.div`
     margin:10px;
@@ -64,7 +65,7 @@ const ProductsTable = () => {
         },[result])
 
         const handleDelete = (id) => {
-            axiosInstance.delete(`/product/delete/${id}`)
+            axios.delete(`/product/delete/${id}`)
             window.location.reload(true)
         }
 

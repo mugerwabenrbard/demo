@@ -5,6 +5,7 @@ import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined';
 import { useState } from 'react';
 import { mobile } from '../responsive';
 import { axiosInstance } from '../config';
+import axios from 'axios';
 
 const Container = styled.div`
     width:100%;
@@ -96,7 +97,7 @@ const Slider = () => {
 
     useEffect(() => {
       
-        axiosInstance.get('/product/products')
+        axios.get('/product/products')
         .then(res=>setResult(res.data.data))
 
     },[])

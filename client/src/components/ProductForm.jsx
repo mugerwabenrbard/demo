@@ -1,4 +1,5 @@
 import { Checkbox } from '@mui/material'
+import axios from 'axios'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -93,7 +94,7 @@ const ProductForm = () => {
         formData.append('description', description)
         formData.append('featured', featured)
         formData.append('image', image)
-        axiosInstance.post('/product/add', formData).then(res=>{
+        axios.post('/product/add', formData).then(res=>{
             if(res.data.status === 'FAILED'){
                 setMessage(res.data.message)
             }else{

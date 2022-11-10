@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { mobile } from '../responsive'
 import { useLocation } from 'react-router-dom'
 import { axiosInstance } from '../config'
+import axios from 'axios'
 
 const Container = styled.div``
 
@@ -76,7 +77,7 @@ const Product = () => {
     useEffect(() => {
       const getProduct = async ()=>{
         try {
-            const res = await axiosInstance.get("/product/find/"+id)
+            const res = await axios.get("/product/find/"+id)
             setProduct(res.data.data)
         } catch (error) {
             
