@@ -1,5 +1,6 @@
 import { Checkbox } from '@mui/material'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import {axiosInstance} from '../config'
 
@@ -77,6 +78,8 @@ const ProductForm = () => {
     const [description, setDescription] = useState('')
     const [featured, setFeatured] = useState(false)
     const [image, setImage] = useState('')
+    const [message,setMessage] = useState('')
+    const history = useNavigate()
 
     const handleSubmit = (e) =>{
         e.preventDefault()
@@ -90,13 +93,21 @@ const ProductForm = () => {
         formData.append('description', description)
         formData.append('featured', featured)
         formData.append('image', image)
-        axiosInstance.post('/product/add', formData).then(res=>console.log(res.data)).catch(err=>console.log(err))
+        axiosInstance.post('/product/add', formData).then(res=>{
+            if(res.data.status === 'FAILED'){
+                setMessage(res.data.message)
+            }else{
+                history('/manager')
+            }
+            console.log(res.data.status)
+        }).catch(err=>console.log(err))
     
     }
   return (
     <Container>
         <Wrapper>
             <Title>CREATE NEW PRODUCT</Title>
+            <p style={{color:'red', textAlign:'center', fontSize:'16px'}}>{message}</p>
             <Form onSubmit={handleSubmit} encType="multipart/form-data">
                 <Input type="file" accept='.jpeg, .jpg, .png' filename='image' onChange={e=>setImage(e.target.files[0])}/>
                 <Input placeholder="Label" onChange={e=>setLabel(e.target.value)}/>
@@ -109,7 +120,6 @@ const ProductForm = () => {
                     <Span>Featured:</Span>
                     <Input type='checkbox' onChange={e => setFeatured(e.target.checked)}/>
                 </MyCheckbox>
-                
                 <Button>Add New</Button>
             </Form>
         </Wrapper>

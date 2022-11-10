@@ -16,21 +16,21 @@ mongoose.connect(process.env.MONGO_URL).then(console.log('DB successfully connec
 // Endpoints
 app.use('/api/product/', productsRoute)
 
-    // __dirname = path.resolve()
-    // if (process.env.NODE_ENV === 'production') {
-    //     app.use(express.static(path.join(__dirname, '/client/build')))
+    __dirname = path.resolve()
+    if (process.env.NODE_ENV === 'production') {
+        app.use(express.static(path.join(__dirname, '/client/build')))
         
-    //     app.get('*', (req, res) => {
-    //         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-    //     });
-    // }else{
-    //     app.get("/",(req,res)=>{
-    //         res.send('API RUNNING CORRECTLY')
-    //     })
-    // }
+        app.get('*', (req, res) => {
+            res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+        });
+    }else{
+        app.get("/",(req,res)=>{
+            res.send('API RUNNING CORRECTLY')
+        })
+    }
 
 
 // App listening on Port
-app.listen(process.env.PORT || 5000, ()=>{
+app.listen(5000, ()=>{
     console.log('Server is running on port 5000')
 })

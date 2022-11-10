@@ -5,7 +5,7 @@ const fs = require('fs')
 
 const storage = multer.diskStorage({
     destination: (req,file, callBack)=>{
-        callBack(null,"./uploads")
+        callBack(null,"/demo/server/client/build/uploads")
     },
     filename: (req,file, callBack) =>{
         callBack(null, file.originalname)
@@ -28,22 +28,26 @@ router.get('/products',async(req,res)=>{
 // Add product
 router.post('/add', upload.single('image'), async(req,res)=>{
 
-    try {
-        const newProduct = new products({
-            label:req.body.label,
-            brand:req.body.brand,
-            name:req.body.name,
-            price:req.body.price,
-            ingredients:req.body.ingredients,
-            description:req.body.description,
-            featured:req.body.featured,
-            image: req.file.originalname
-        })
-        const savedPdt = await newProduct.save()
-        res.json({status:'SUCCESSFUL', message:'Product Saved Successfully'})
-
-    } catch (error) {
-        console.log(error)
+    if (req.file !== '') {
+        try {
+            const newProduct = new products({
+                label:req.body.label,
+                brand:req.body.brand,
+                name:req.body.name,
+                price:req.body.price,
+                ingredients:req.body.ingredients,
+                description:req.body.description,
+                featured:req.body.featured,
+                image: req.file.originalname
+            })
+            const savedPdt = await newProduct.save()
+            res.json({status:'SUCCESSFUL', message:'Product Saved Successfully', data: savedPdt})
+    
+        } catch (error) {
+            console.log(error)
+            res.json({status:'FAILED', message:'Product Failed To Save'})
+        }
+    }else{
         res.json({status:'FAILED', message:'Product Failed To Save'})
     }
 })
@@ -82,7 +86,7 @@ router.put('/update/:id', upload.single('image'), async(req,res)=>{
             })
             
             if (req.file !== undefined && req.file.originalname !== singleProduct.image) {
-                fs.unlink(`./uploads/${singleProduct.image}`, (err)=>{console.log(err)})
+                fs.unlink(`/demo/server/client/build/uploads/${singleProduct.image}`, (err)=>{console.log(err)})
                 
             }
 
@@ -117,7 +121,7 @@ router.delete('/delete/:id', async(req,res)=>{
         
         if (id) {
             const data = await products.findByIdAndRemove(id).exec()
-            fs.unlink(`../client/public/uploads/${data.image}`, (err)=>{console.log(err)})
+            fs.unlink(`/demo/server/client/build/uploads/${data.image}`, (err)=>{console.log(err)})
             
         }
 

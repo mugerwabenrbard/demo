@@ -79,7 +79,7 @@ const PriceBox = styled.div`
 const Product = ({item}) => {
   return (
     <Container>
-        <Image src={`/uploads/${item.image}`}/>
+        <Image src={`../../uploads/${item.image}`}/>
         <Info>
             <Icon>
                 <ShoppingCartOutlinedIcon/>
