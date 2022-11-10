@@ -80,17 +80,17 @@ const ProductForm = () => {
 
     const handleSubmit = (e) =>{
         e.preventDefault()
-        alert('oke')
-        // const formData = new FormData()
-        // formData.append('label', label)
-        // formData.append('brand', brand)
-        // formData.append('name', name)
-        // formData.append('price', price)
-        // formData.append('ingredients', ingredients)
-        // formData.append('description', description)
-        // formData.append('featured', featured)
-        // formData.append('image', image)
-        // axiosInstance.post('/product/add', formData).then(res=>console.log(res.data)).catch(err=>console.log(err))
+        
+        const formData = new FormData()
+        formData.append('label', label)
+        formData.append('brand', brand)
+        formData.append('name', name)
+        formData.append('price', price)
+        formData.append('ingredients', ingredients)
+        formData.append('description', description)
+        formData.append('featured', featured)
+        formData.append('image', image)
+        axiosInstance.post('/product/add', formData).then(res=>console.log(res.data)).catch(err=>console.log(err))
         // window.location = `/product/${}`
         // window.location.reload(true)
     
