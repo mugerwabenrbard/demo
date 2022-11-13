@@ -45,7 +45,7 @@ router.post('/add', upload.single('image'), async(req,res)=>{
     
         } catch (error) {
             console.log(error)
-            res.json({status:'FAILED', message:'Product Failed To Save'})
+            res.json({status:'FAILED TRY', message:'Product Failed To Save'})
         }
     }else{
         res.json({status:'FAILED', message:'Product Failed To Save'})

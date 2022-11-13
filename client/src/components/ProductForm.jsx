@@ -98,10 +98,10 @@ const ProductForm = () => {
             if(res.data.status === 'FAILED'){
                 setMessage(res.data.message)
             }else{
+                console.log(res.data.status)
                 history('/manager')
             }
-            console.log(res.data.status)
-        }).catch(err=>console.log(err))
+        }).catch(console.log('call failed'))
     
     }
   return (
