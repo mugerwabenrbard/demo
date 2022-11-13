@@ -91,7 +91,7 @@ const EditProduct = () => {
     useEffect(() => {
       const getProduct = async ()=>{
         try {
-            const res = await axios.get("/product/find/"+id)
+            const res = await axiosInstance.get("/product/find/"+id)
             setProduct(res.data.data)
         } catch (error) {
             
@@ -122,7 +122,7 @@ const EditProduct = () => {
       formData.append('description', product.description)
       formData.append('featured', product.featured)
       formData.append('image', product.image)
-      axios.put(`/product/update/${id}`, formData).then(res=>setResponse({...res.data})).catch(err=>console.log(err))
+      axiosInstance.put(`/product/update/${id}`, formData).then(res=>setResponse({...res.data})).catch(err=>console.log(err))
       console.log(response)
       window.location.reload(true)
   }

@@ -77,7 +77,7 @@ const Product = () => {
     useEffect(() => {
       const getProduct = async ()=>{
         try {
-            const res = await axios.get("/product/find/"+id)
+            const res = await axiosInstance.get("/product/find/"+id)
             setProduct(res.data.data)
         } catch (error) {
             

@@ -97,7 +97,7 @@ const Slider = () => {
 
     useEffect(() => {
       
-        axios.get('/product/products')
+        axiosInstance.get('/product/products')
         .then(res=>setResult(res.data.data))
 
     },[])

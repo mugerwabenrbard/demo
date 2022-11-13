@@ -94,7 +94,7 @@ const ProductForm = () => {
         formData.append('description', description)
         formData.append('featured', featured)
         formData.append('image', image)
-        axios.post('/product/add', formData).then(res=>{
+        axiosInstance.post('/product/add', formData).then(res=>{
             if(res.data.status === 'FAILED'){
                 setMessage(res.data.message)
             }else{

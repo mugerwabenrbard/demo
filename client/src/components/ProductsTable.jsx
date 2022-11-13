@@ -65,7 +65,7 @@ const ProductsTable = () => {
         },[result])
 
         const handleDelete = (id) => {
-            axios.delete(`/product/delete/${id}`)
+            axiosInstance.delete(`/product/delete/${id}`)
             window.location.reload(true)
         }
 
