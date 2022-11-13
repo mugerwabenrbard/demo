@@ -94,14 +94,14 @@ const ProductForm = () => {
         formData.append('description', description)
         formData.append('featured', featured)
         formData.append('image', image)
-        axiosInstance.post('/product/add', formData).then(res=>{
+        axios.post('https://mugerwademo.herokuapp.com/api/product/add', formData).then(res=>{
             if(res.data.status === 'FAILED'){
                 setMessage(res.data.message)
             }else{
                 console.log(res.data.status)
                 history('/manager')
             }
-        }).catch(console.log('call failed'))
+        }).catch(err=>console.log(err))
     
     }
   return (
