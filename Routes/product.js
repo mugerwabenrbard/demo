@@ -5,7 +5,7 @@ const fs = require('fs')
 
 const storage = multer.diskStorage({
     destination: (req,file, callBack)=>{
-        callBack(null,"/mugerwademo/client/public/uploads")
+        callBack(null,"/client/public/uploads")
     },
     filename: (req,file, callBack) =>{
         callBack(null, file.originalname)
@@ -86,7 +86,7 @@ router.put('/update/:id', upload.single('image'), async(req,res)=>{
             })
             
             if (req.file !== undefined && req.file.originalname !== singleProduct.image) {
-                fs.unlink(`/mugerwademo/client/public/uploads/${singleProduct.image}`, (err)=>{console.log(err)})
+                fs.unlink(`/client/public/uploads/${singleProduct.image}`, (err)=>{console.log(err)})
                 
             }
 
@@ -121,7 +121,7 @@ router.delete('/delete/:id', async(req,res)=>{
         
         if (id) {
             const data = await products.findByIdAndRemove(id).exec()
-            fs.unlink(`/mugerwademo/client/public/uploads/${data.image}`, (err)=>{console.log(err)})
+            fs.unlink(`/client/public/uploads/${data.image}`, (err)=>{console.log(err)})
             
         }
 
