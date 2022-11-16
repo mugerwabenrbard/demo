@@ -8,7 +8,10 @@ const productSchema = mongoose.Schema({
     ingredients: {type:String, required: false},
     numberInStock: {type:Number, required: false, default: 1},
     description: {type:String, required: true},
-    image: {type:String, required: false},
+    image: {
+        publicID:{type:String, required:true},
+        url:{type:String, required:true}
+    },
     featured: {type:Boolean, required: true},
 }, {timestamps:true})
 

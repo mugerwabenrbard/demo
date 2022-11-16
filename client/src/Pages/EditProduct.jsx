@@ -1,9 +1,11 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import Navbar from '../components/Navbar'
 import { axiosInstance } from '../config'
+import { mobile } from '../responsive'
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Container = styled.div`
     width:100vw;
@@ -15,6 +17,10 @@ const Container = styled.div`
     display:flex;
     align-items:center;
     justify-content: center;
+    ${mobile({
+      width: "100%",
+      height: "100%"
+    })}
 `
 const Wrapper = styled.div`
     width:40%;
@@ -23,12 +29,19 @@ const Wrapper = styled.div`
     display:flex;
     flex-direction:column;
     align-items:center;
+    ${mobile({
+      width: "100%",
+      margin: "20px"
+    })}
 `
 
 const Title = styled.h1`
     font-size:24px;
     font-weight:00px;
     text-align: center;
+    ${mobile({
+      fontSize:"18px"
+    })}
 `
 
 const Form = styled.form`
@@ -86,45 +99,75 @@ const EditProduct = () => {
     const location = useLocation();
     const id =  location.pathname.split("/")[2]
     const [product, setProduct] = useState({})
-    const [response, setResponse] = useState({})
+    const [image, setImage] = useState('')
+    const [loaded,setLoaded] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
+      setLoaded(true)
       const getProduct = async ()=>{
         try {
             const res = await axiosInstance.get("/product/find/"+id)
             setProduct(res.data.data)
+            setImage(res.data.data.image.url)
         } catch (error) {
-            
+            console.log(error)
         }
     }
     getProduct()
     },[])
 
     const handleChange = (e) =>{
-      setProduct({...product, [e.target.name]: e.target.value})
+      const value = e.target.value
+      setProduct({...product, [e.target.name]: value})
+      console.log(product)
     }
 
-    const handlePhoto = (e) =>{
-      setProduct({...product, image : e.target.files[0]})
-    }
+    const handlePhoto = async(e) =>{
+      const file = e.target.files[0]
+      const base64 = await convertToBase64(file)
+      setProduct({...product, image : base64})
+      setImage(base64)
+  }
+
+  // Convert Image to base 64
+  const convertToBase64 = (file) =>{
+      return new Promise((resolve, reject)=>{
+          const fileReader = new FileReader()
+          fileReader.readAsDataURL(file)
+          fileReader.onload = () =>{
+              resolve(fileReader.result)
+          }
+
+          fileReader.onerror = (error) =>{
+              reject(error)
+          }
+      })
+  }
 
     const handleCheck = (e) =>{
       setProduct({...product, featured: e.target.checked})
     }
     const handleSubmit = (e) =>{
       e.preventDefault()
-      const formData = new FormData()
-      formData.append('label', product.label)
-      formData.append('brand', product.brand)
-      formData.append('name', product.name)
-      formData.append('price', product.price)
-      formData.append('ingredients', product.ingredients)
-      formData.append('description', product.description)
-      formData.append('featured', product.featured)
-      formData.append('image', product.image)
-      axiosInstance.put(`/product/update/${id}`, formData).then(res=>setResponse({...res.data})).catch(err=>console.log(err))
-      console.log(response)
-      window.location.reload(true)
+      setLoaded(true)
+      const formData = {
+        label: product.label,
+        brand: product.brand,
+        name: product.name,
+        price: product.price,
+        ingredients: product.ingredients,
+        description: product.description,
+        featured: product.featured,
+        image: product.image
+        }
+        // console.log(formData)
+        axiosInstance.put(`/product/update/${id}`, formData)
+        .then(res=>{
+          console.log(res.data)
+          navigate('/manager')
+        })
+        .catch(err=>console.log(err))
   }
   
   return (
@@ -132,10 +175,11 @@ const EditProduct = () => {
     <Navbar/>
     <Container>
         <Wrapper>
+          {!loaded && <Backdrop open><CircularProgress color="inherit" /></Backdrop>}
             <Title>UPDATE PRODUCT</Title>
-            <Image src={`/uploads/${product.image}`}/>
-            <Form onSubmit={handleSubmit} encType="multipart/form-data">
-                <Input type="file" accept='.jpeg, .jpg, .png' defaultValue={product.image} filename='image' onChange={handlePhoto}/>
+            <Image src={image}/>
+            <Form onSubmit={handleSubmit}>
+                <Input type="file" accept='.jpeg, .jpg, .png' onChange={handlePhoto}/>
                 <Input defaultValue={product.label} name='label' placeholder="Label" onChange={handleChange}/>
                 <Input defaultValue={product.brand} name='brand' placeholder="Brand" onChange={handleChange}/>
                 <Input placeholder="Name" name='name' defaultValue={product.name} onChange={handleChange}/>

@@ -1,9 +1,10 @@
-import { Checkbox } from '@mui/material'
-import axios from 'axios'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import {axiosInstance} from '../config'
+import { mobile } from '../responsive'
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Container = styled.div`
     width:100vw;
@@ -15,17 +16,29 @@ const Container = styled.div`
     display:flex;
     align-items:center;
     justify-content: center;
+    ${mobile({
+        width:'100%',
+        height:'100%'
+    })}
 `
 const Wrapper = styled.div`
     width:40%;
     padding: 20px;
     background-color:white;
+    ${mobile({
+        width:'100%',
+        margin: "20px 0"
+    })}
 `
 
 const Title = styled.h1`
     font-size:24px;
     font-weight:00px;
     text-align: center;
+    ${mobile({
+        fontSize:'18px',
+        marginBottom: '10px'
+    })}
 `
 
 const Form = styled.form`
@@ -81,36 +94,65 @@ const ProductForm = () => {
     const [image, setImage] = useState('')
     const [message,setMessage] = useState('')
     const history = useNavigate()
+    const [data,setData] = useState({})
+    const [loaded, setLoaded] = useState(false)
 
     const handleSubmit = (e) =>{
         e.preventDefault()
-
-        const formData = new FormData()
-        formData.append('label', label)
-        formData.append('brand', brand)
-        formData.append('name', name)
-        formData.append('price', price)
-        formData.append('ingredients', ingredients)
-        formData.append('description', description)
-        formData.append('featured', featured)
-        formData.append('image', image)
-        axios.post('https://mugerwademo.herokuapp.com/api/product/add', formData).then(res=>{
-            if(res.data.status === 'FAILED'){
+        setLoaded(true)
+        const formData = {
+        label: label,
+        brand: brand,
+        name: name,
+        price: price,
+        ingredients: ingredients,
+        description: description,
+        featured: featured,
+        image: image
+        }
+        axiosInstance.post('/product/add', formData).then(res=>{
+            if(res.data.status === 'FAILED TRY'){
                 setMessage(res.data.message)
+                console.log(res.data.data)
             }else{
-                console.log(res.data.status)
+                setData(res.data)
+                console.log(res.data)
                 history('/manager')
             }
         }).catch(err=>console.log(err))
     
     }
+
+    const handleImageChange = async(e) =>{
+        const file = e.target.files[0]
+        // console.log(file)
+        const base64 = await convertToBase64(file)
+        setImage(base64)
+    }
+
+    const convertToBase64 = (file) =>{
+        return new Promise((resolve, reject)=>{
+            const fileReader = new FileReader()
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () =>{
+                resolve(fileReader.result)
+            }
+
+            fileReader.onerror = (error) =>{
+                reject(error)
+            }
+        })
+    }
   return (
     <Container>
         <Wrapper>
             <Title>CREATE NEW PRODUCT</Title>
-            <p style={{color:'red', textAlign:'center', fontSize:'16px'}}>{message}</p>
-            <Form onSubmit={handleSubmit} encType="multipart/form-data">
-                <Input type="file" accept='.jpeg, .jpg, .png' filename='image' onChange={e=>setImage(e.target.files[0])}/>
+            {!loaded ? <p style={{color:'red', textAlign:'center', fontSize:'16px'}}>{message}</p> : <Backdrop
+                open><CircularProgress color="inherit" /></Backdrop>}
+            
+            <Form onSubmit={handleSubmit}>
+                <Input type="file" onChange={e=>handleImageChange(e)}/>
+            <img src={image} width='70px'/>
                 <Input placeholder="Label" onChange={e=>setLabel(e.target.value)}/>
                 <Input placeholder="Brand" onChange={e=>setBrand(e.target.value)}/>
                 <Input placeholder="Name" onChange={e=>setName(e.target.value)}/>

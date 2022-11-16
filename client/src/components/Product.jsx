@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import Search from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom'
+import { mobile } from '../responsive';
 
 const Info = styled.div`
     opacity:0;
@@ -21,18 +22,22 @@ const Info = styled.div`
 
 const Container = styled.div`
     flex:1;
-    margin: 50px; 
-    min-width: 285px;
-    height: 350px;
+    margin:50px 20px; 
+    width: 250px;
+    height: 250px;
     display:flex;
     align-items:center;
-    justify-content:centre;
+    justify-content:space-between;
     position: relative;
     flex-direction: column;
 
     &:hover ${Info}{
         opacity:1;
     }
+    ${mobile({
+        width: "250px",
+        height: "250px"
+    })}
 `
 // const Circle = styled.div`
 //     width:200px;
@@ -43,7 +48,7 @@ const Container = styled.div`
 //     `
     const Image = styled.img`
     height:100%;
-    z-index:2;
+    
 `
 const Icon = styled.div`
     width:40px;
@@ -78,23 +83,25 @@ const PriceBox = styled.div`
 
 const Product = ({item}) => {
   return (
-    <Container>
-        <Image src={`../../uploads/${item.image}`}/>
-        <Info>
-            <Icon>
-                <ShoppingCartOutlinedIcon/>
-            </Icon>
-            <Icon>
-                <Link to={`/product/${item._id}`}>
-                    <Search style={{color: '#ffffff'}}/>
-                </Link>
-            </Icon>
-        </Info>
-            <h4>{item.name}</h4>
-        <PriceBox>
-            <Price>UGX. {item.price}</Price>
-        </PriceBox>
-    </Container>
+    <Link to={`/product/${item._id}`} style={{textDecoration:"none", color: "inherit"}}>
+        <Container key={item._id}>
+            <Image src={item.image.url}/>
+            <Info>
+                <Icon>
+                    <ShoppingCartOutlinedIcon/>
+                </Icon>
+                <Icon>
+                    <Link to={`/product/${item._id}`}>
+                        <Search style={{color: '#ffffff'}}/>
+                    </Link>
+                </Icon>
+            </Info>
+                <h4>{item.name}</h4>
+            <PriceBox>
+                <Price>UGX. {item.price}</Price>
+            </PriceBox>
+        </Container>
+    </Link>
   )
 }
 

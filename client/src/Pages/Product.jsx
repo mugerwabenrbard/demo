@@ -6,6 +6,7 @@ import { mobile } from '../responsive'
 import { useLocation } from 'react-router-dom'
 import { axiosInstance } from '../config'
 import axios from 'axios'
+import ScaleLoder from 'react-spinners/ScaleLoader'
 
 const Container = styled.div``
 
@@ -73,12 +74,14 @@ const Product = () => {
     const location = useLocation();
     const id =  location.pathname.split("/")[2]
     const [product, setProduct] = useState({})
+    const [image, setImage] = useState('')
 
     useEffect(() => {
       const getProduct = async ()=>{
         try {
             const res = await axiosInstance.get("/product/find/"+id)
             setProduct(res.data.data)
+            setImage(res.data.data.image.url)
         } catch (error) {
             
         }
@@ -98,9 +101,10 @@ const Product = () => {
     <Container>
         <Announcements/>
         <Navbar/>
-        <Wrapper>
+        {
+            product ? <Wrapper>
             <ImageContainer>
-                <Image src={`/uploads/${product.image}`}/>
+                <Image src={image}/>
             </ImageContainer>
             <InfoContainer>
                 <Title>{product.name}</Title>
@@ -110,7 +114,10 @@ const Product = () => {
                 <Price>UGX. {product.price}</Price>
                 <Button onClick={handleClick}>ADD TO CART</Button>
             </InfoContainer>
-        </Wrapper>
+        </Wrapper> :
+        <ScaleLoder color="#201b56"/>
+        }
+        
     </Container>
   )
 }

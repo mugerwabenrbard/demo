@@ -10,7 +10,7 @@ const Home = () => {
       <Announcements/>  
       <Navbar/>
       <Slider/>
-      <h1 style={{textAlign:'center', color: '#201b56'}}>SHOP</h1>
+      <h1 style={{textAlign:'center', color: '#201b56', margin:'10px 0 0 0'}}>SHOP</h1>
       <Products/>
     </div>
   )

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { mobile } from '../responsive'
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../config';
-import axios from 'axios';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Container = styled.div`
     margin:10px;
+    overflow-x: auto;
 `
 const Table = styled.table`
     width: 100%;
@@ -55,8 +56,10 @@ const Icon = styled.div`
 const ProductsTable = () => {
 
     const [result, setResult] = useState([])
+    const [loaded, setLoaded] = useState(false)
+    const navigate = useNavigate()
         useEffect(() => {
-
+            setLoaded(true)
             const getData = async() => {
                 const res = await axiosInstance.get('/product/products')
                 setResult(res.data.data)
@@ -65,8 +68,9 @@ const ProductsTable = () => {
         },[result])
 
         const handleDelete = (id) => {
+            setLoaded(true)
             axiosInstance.delete(`/product/delete/${id}`)
-            window.location.reload(true)
+            navigate('/manager')
         }
 
   return (
@@ -84,11 +88,12 @@ const ProductsTable = () => {
                     <TH>Actions</TH>
                 </TR>
             </Thead>
+            
             <Tbody>
-                {result ? result.map((product, i) =>
+                {(loaded) ? <>{result ? result.map((product, i) =>
                 <TR key={product._id}>
                     <TD>{++i}</TD>
-                    <TD><Image src={`/uploads/${product.image}`} alt="" /></TD>
+                    <TD><Image src={product.image.url} alt="" /></TD>
                     <TD>{product.label}</TD>
                     <TD>{product.brand}</TD>
                     <TD>{product.name}</TD>
@@ -103,7 +108,7 @@ const ProductsTable = () => {
                         </Actions>
                     </TD>
                 </TR>
-                ): <TR><TD colSpan={8}> NO PRODUCTS FOUND</TD></TR>}
+                ): <TR><TD colSpan={8}>No Data Found</TD></TR>}</> : <Backdrop open><CircularProgress color="inherit" /></Backdrop> }
             </Tbody>
         </Table>
     </Container>

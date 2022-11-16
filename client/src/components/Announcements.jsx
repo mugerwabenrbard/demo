@@ -1,9 +1,9 @@
 import React from 'react'
 
 import styled from 'styled-components'
+import { mobile } from '../responsive'
 
 const Container = styled.div`
-    height:30px;
     background-color: #201b56;
     color:white;
     display: flex;
@@ -13,10 +13,15 @@ const Container = styled.div`
     font-weight: 500
 `
 
+const Annouce = styled.p`
+  margin:5px 10px;
+  text-align:center;
+`
+
 const Announcements = () => {
   return (
     <Container>
-        <>Super Deal! Free Shipping On orders Over UGX 50,000</>
+        <Annouce>Super Deal! Free Shipping On orders Over UGX 50,000</Annouce>
     </Container>
   )
 }

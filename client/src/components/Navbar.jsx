@@ -12,7 +12,6 @@ const Container = styled.div`
     -webkit-box-shadow: 5px 5px 15px 2px rgba(0,0,0,0.25); 
     box-shadow: 5px 5px 15px 2px rgba(0,0,0,0.25);
     ${mobile({
-        height: "50px"
     })}
 `
 

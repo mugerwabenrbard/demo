@@ -5,7 +5,8 @@ import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined';
 import { useState } from 'react';
 import { mobile } from '../responsive';
 import { axiosInstance } from '../config';
-import axios from 'axios';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Container = styled.div`
     width:100%;
@@ -85,6 +86,7 @@ const Slider = () => {
 
     const [slideIndex, setSlideIndex] = useState(0)
     const [result, setResult] = useState([])
+    const [loaded, setLoaded] = useState(false)
 
     const handleClick = (direction) =>{
         if (direction === "left") {
@@ -96,7 +98,7 @@ const Slider = () => {
 
 
     useEffect(() => {
-      
+        setLoaded(true)
         axiosInstance.get('/product/products')
         .then(res=>setResult(res.data.data))
 
@@ -104,6 +106,9 @@ const Slider = () => {
     
   return (
     <Container>
+        {
+            !loaded && <Backdrop open><CircularProgress color="inherit" /></Backdrop>
+        }
         <Arrows direction="left" onClick={()=>handleClick("left")}>
             <ArrowLeftOutlinedIcon/>
         </Arrows>
@@ -111,7 +116,7 @@ const Slider = () => {
                 <Wrapper key={prdt._id} slideIndex={slideIndex}>
                     <Slide>
                         <ImageContainer>
-                            <Image src={"/uploads/"+ prdt.image}/>
+                            <Image src={prdt.image.url}/>
                         </ImageContainer>
                         <InfoContainer>
                             <Title>{prdt.name}</Title>
